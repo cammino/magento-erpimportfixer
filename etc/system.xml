@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <erpimportfixer>
+            <label>Configurações de importação</label>
+            <sort_order>105</sort_order>
+        </erpimportfixer>
+   </tabs>
+   <sections>
+       <erpimportfixer>
+           <label>Configurações</label>
+           <tab>erpimportfixer</tab>
+           <sort_order>1</sort_order>
+           <show_in_default>1</show_in_default>
+           <show_in_website>1</show_in_website>
+           <show_in_store>1</show_in_store>
+           <groups>
+               <configurable_config>
+                   <label>Agrupamento de produtos configuráveis</label>
+                   <frontend_type>text</frontend_type>
+                   <sort_order>0</sort_order>
+                   <show_in_default>1</show_in_default>
+                   <show_in_website>1</show_in_website>
+                   <show_in_store>1</show_in_store>
+                   <fields>
+                        <color_attr_id>
+                            <label>Id do atributo de cor</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </color_attr_id>
+                        <tamanho_attr_id>
+                            <label>Id do atributo de tamanho</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </tamanho_attr_id>
+                   </fields>
+               </configurable_config>
+           </groups>
+       </erpimportfixer>
+   </sections>
+</config>

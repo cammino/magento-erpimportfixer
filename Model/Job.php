@@ -60,11 +60,11 @@ class Cammino_Erpimportfixer_Model_Job
                                 break;
                             }
                         }
+                        $childProductObj->setVisibility(1);
                     }
                     $childProductObj->save();
                     $children[] = $child;
                 }
-                Mage::log($children, null, 'erpimportfixer.log');
                 $newProduct = $this->createNewConfigurableProduct($parentProductObj, $children);
                 //Após, excluir o $parentProduct
             }
@@ -102,7 +102,7 @@ class Cammino_Erpimportfixer_Model_Job
             /** assigning associated product to configurable */
             /**/
             if (!empty($children[0]['color_val']) && !empty($children[0]['tamanho_val'])) {
-                $configProduct->getTypeInstance()->setUsedProductAttributeIds(array(92, 155));
+                $configProduct->getTypeInstance()->setUsedProductAttributeIds(array(Mage::getStoreConfig('erpimportfixer/configurable_config/color_attr_id'), Mage::getStoreConfig('erpimportfixer/configurable_config/tamanho_attr_id')));
                 $configurableAttributesData = $configProduct->getTypeInstance()->getConfigurableAttributesAsArray();
                 $configProduct->setCanSaveConfigurableAttributes(true);
                 $configProduct->setConfigurableAttributesData($configurableAttributesData);
@@ -111,14 +111,14 @@ class Cammino_Erpimportfixer_Model_Job
                     $configurableProductsData[$child['id']] = array(
                         '0' => array(
                             'label' => $child['color'],
-                            'attribute_id' => '92', //id da cor
+                            'attribute_id' => Mage::getStoreConfig('erpimportfixer/configurable_config/color_attr_id'),
                             'value_index' => $child['color_val'],
                             'is_percent' => '0',
                             'pricing_value' => '0'
                         ),
                         '1' => array(
                             'label' => $child['tamanho'],
-                            'attribute_id' => '155', //id do tamanho
+                            'attribute_id' => Mage::getStoreConfig('erpimportfixer/configurable_config/tamanho_attr_id'),
                             'value_index' => $child['tamanho_val'],
                             'is_percent' => '0',
                             'pricing_value' => '0'
@@ -126,7 +126,7 @@ class Cammino_Erpimportfixer_Model_Job
                     );
                 }
             } else if (!empty($children[0]['color_val'])) {
-                $configProduct->getTypeInstance()->setUsedProductAttributeIds(array(92));
+                $configProduct->getTypeInstance()->setUsedProductAttributeIds(array(Mage::getStoreConfig('erpimportfixer/configurable_config/color_attr_id')));
                 $configurableAttributesData = $configProduct->getTypeInstance()->getConfigurableAttributesAsArray();
                 $configProduct->setCanSaveConfigurableAttributes(true);
                 $configProduct->setConfigurableAttributesData($configurableAttributesData);
@@ -135,7 +135,7 @@ class Cammino_Erpimportfixer_Model_Job
                     $configurableProductsData[$child['id']] = array(
                         '0' => array(
                             'label' => $child['color'],
-                            'attribute_id' => '92', //id da cor
+                            'attribute_id' => Mage::getStoreConfig('erpimportfixer/configurable_config/color_attr_id'),
                             'value_index' => $child['color_val'],
                             'is_percent' => '0',
                             'pricing_value' => '0'
@@ -143,7 +143,7 @@ class Cammino_Erpimportfixer_Model_Job
                     );
                 }
             } else if (!empty($children[0]['tamanho_val'])) {
-                $configProduct->getTypeInstance()->setUsedProductAttributeIds(array(155));
+                $configProduct->getTypeInstance()->setUsedProductAttributeIds(array(Mage::getStoreConfig('erpimportfixer/configurable_config/tamanho_attr_id')));
                 $configurableAttributesData = $configProduct->getTypeInstance()->getConfigurableAttributesAsArray();
                 $configProduct->setCanSaveConfigurableAttributes(true);
                 $configProduct->setConfigurableAttributesData($configurableAttributesData);
@@ -152,7 +152,7 @@ class Cammino_Erpimportfixer_Model_Job
                     $configurableProductsData[$child['id']] = array(
                         '0' => array(
                             'label' => $child['tamanho'],
-                            'attribute_id' => '155', //id da cor
+                            'attribute_id' => Mage::getStoreConfig('erpimportfixer/configurable_config/tamanho_attr_id'),
                             'value_index' => $child['tamanho_val'],
                             'is_percent' => '0',
                             'pricing_value' => '0'

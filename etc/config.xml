@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <config>
-    <modules>
-        <Cammino_Erpimportfixer>
-            <version>0.0.1</version>
-        </Cammino_Erpimportfixer>
-    </modules>
-    <global>
-        <models>
-            <cammino>
-                <class>Cammino_Erpimportfixer_Model</class>
-            </cammino>
-        </models>
-    </global>
+  <modules>
+    <Cammino_Erpimportfixer>
+      <version>0.0.1</version>
+    </Cammino_Erpimportfixer>
+  </modules>
+  <global>
+    <models>
+      <cammino>
+        <class>Cammino_Erpimportfixer_Model</class>
+      </cammino>
+    </models>
+  </global>
   <crontab>
     <jobs>
       <cammino_erpimportfixer_job>
