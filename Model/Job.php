@@ -5,6 +5,7 @@ class Cammino_Erpimportfixer_Model_Job
 
     public function group()
     {
+        Mage::log('iniciou o agrupamento', null, 'erpimportfixer.log');
         $analized = [];
         $allProducts = Mage::getModel('catalog/product')->getCollection()
             ->addFieldToFilter('type_id', array('eq' => 'simple'))
@@ -70,6 +71,7 @@ class Cammino_Erpimportfixer_Model_Job
             }
             $analized[] = $skuTag;
         }
+        Mage::log('encerrou agrupopamento', null, 'erpimportfixer.log');
     }
 
     private function createNewConfigurableProduct($templateProduct, $children)
@@ -162,8 +164,10 @@ class Cammino_Erpimportfixer_Model_Job
             }
             $configProduct->setConfigurableProductsData($configurableProductsData);
             $configProduct->save();
+            Mage::log('novo produto configrável:' . $configProduct->getSku(), null, 'erpimportfixer.log');
             return $configProduct;
         } catch (Exception $e) {
+            Mage::log($e->getMessage(), null, 'erpimportfixer.log');
             Mage::log($e->getMessage());
             echo $e->getMessage();
         }
