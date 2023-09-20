@@ -5,8 +5,11 @@ class Cammino_Erpimportfixer_ErpimportfixerController extends Mage_Core_Controll
 
     public function groupAction()
     {
+        Mage::log('iniciou o agrupamento', null, 'erpimportfixer.log');
         $analized = [];
-        $allProducts = Mage::getModel('catalog/product')->getCollection();
+        $allProducts = Mage::getModel('catalog/product')->getCollection()
+            ->addFieldToFilter('type_id', array('eq' => 'simple'))
+            ->addAttributeToFilter('created_at', array('gteq' => strtotime('-2 days', now())));
 
         //Inicializando atributos
         $colorAttribute = Mage::getSingleton('eav/config')
@@ -38,11 +41,11 @@ class Cammino_Erpimportfixer_ErpimportfixerController extends Mage_Core_Controll
                     $childProductObj = Mage::getModel('catalog/product')->load($childProduct->getId());
                     $child = ['id' => $childProduct->getId(), 'name' => $childProductObj->getName()];
                     $nameDiff = str_replace($parentProductObj->getName(), "", $childProductObj->getName());
-                    $attributesFromChild = explode(" - ",$nameDiff);
+                    $attributesFromChild = explode(" - ", $nameDiff);
                     foreach ($attributesFromChild as $attr) {
                         $attr = preg_replace('/^([0-9]{1,})\-/', '', $attr);
-                        $attr = trim($attr," ");
-                        foreach($colorOptions as $colorOption) {
+                        $attr = trim($attr, " ");
+                        foreach ($colorOptions as $colorOption) {
                             if ($attr == $colorOption['label']) {
                                 $child['color'] = $attr;
                                 $child['color_val'] = $colorOption['value'];
@@ -50,7 +53,7 @@ class Cammino_Erpimportfixer_ErpimportfixerController extends Mage_Core_Controll
                                 break;
                             }
                         }
-                        foreach($tamanhoOptions as $tamanhoOption) {
+                        foreach ($tamanhoOptions as $tamanhoOption) {
                             if ($attr == $tamanhoOption['label']) {
                                 $child['tamanho'] = $attr;
                                 $child['tamanho_val'] = $tamanhoOption['value'];
@@ -58,16 +61,17 @@ class Cammino_Erpimportfixer_ErpimportfixerController extends Mage_Core_Controll
                                 break;
                             }
                         }
+                        $childProductObj->setVisibility(1);
                     }
                     $childProductObj->save();
                     $children[] = $child;
                 }
-                Mage::log($children, null, 'erpimportfixer.log');
                 $newProduct = $this->createNewConfigurableProduct($parentProductObj, $children);
                 //Após, excluir o $parentProduct
             }
             $analized[] = $skuTag;
         }
+        Mage::log('encerrou agrupopamento', null, 'erpimportfixer.log');
     }
 
     private function createNewConfigurableProduct($templateProduct, $children)
@@ -100,40 +104,40 @@ class Cammino_Erpimportfixer_ErpimportfixerController extends Mage_Core_Controll
             /** assigning associated product to configurable */
             /**/
             if (!empty($children[0]['color_val']) && !empty($children[0]['tamanho_val'])) {
-                $configProduct->getTypeInstance()->setUsedProductAttributeIds(array(92, 155));
+                $configProduct->getTypeInstance()->setUsedProductAttributeIds(array(Mage::getStoreConfig('erpimportfixer/configurable_config/color_attr_id'), Mage::getStoreConfig('erpimportfixer/configurable_config/tamanho_attr_id')));
                 $configurableAttributesData = $configProduct->getTypeInstance()->getConfigurableAttributesAsArray();
                 $configProduct->setCanSaveConfigurableAttributes(true);
                 $configProduct->setConfigurableAttributesData($configurableAttributesData);
                 $configurableProductsData = array();
-                foreach($children as $child) {
+                foreach ($children as $child) {
                     $configurableProductsData[$child['id']] = array(
                         '0' => array(
                             'label' => $child['color'],
-                            'attribute_id' => '92', //id da cor
+                            'attribute_id' => Mage::getStoreConfig('erpimportfixer/configurable_config/color_attr_id'),
                             'value_index' => $child['color_val'],
                             'is_percent' => '0',
                             'pricing_value' => '0'
                         ),
                         '1' => array(
                             'label' => $child['tamanho'],
-                            'attribute_id' => '155', //id do tamanho
+                            'attribute_id' => Mage::getStoreConfig('erpimportfixer/configurable_config/tamanho_attr_id'),
                             'value_index' => $child['tamanho_val'],
                             'is_percent' => '0',
                             'pricing_value' => '0'
-                        ),    
+                        ),
                     );
                 }
             } else if (!empty($children[0]['color_val'])) {
-                $configProduct->getTypeInstance()->setUsedProductAttributeIds(array(92));
+                $configProduct->getTypeInstance()->setUsedProductAttributeIds(array(Mage::getStoreConfig('erpimportfixer/configurable_config/color_attr_id')));
                 $configurableAttributesData = $configProduct->getTypeInstance()->getConfigurableAttributesAsArray();
                 $configProduct->setCanSaveConfigurableAttributes(true);
                 $configProduct->setConfigurableAttributesData($configurableAttributesData);
                 $configurableProductsData = array();
-                foreach($children as $child) {
+                foreach ($children as $child) {
                     $configurableProductsData[$child['id']] = array(
                         '0' => array(
                             'label' => $child['color'],
-                            'attribute_id' => '92', //id da cor
+                            'attribute_id' => Mage::getStoreConfig('erpimportfixer/configurable_config/color_attr_id'),
                             'value_index' => $child['color_val'],
                             'is_percent' => '0',
                             'pricing_value' => '0'
@@ -141,16 +145,16 @@ class Cammino_Erpimportfixer_ErpimportfixerController extends Mage_Core_Controll
                     );
                 }
             } else if (!empty($children[0]['tamanho_val'])) {
-                $configProduct->getTypeInstance()->setUsedProductAttributeIds(array(155));
+                $configProduct->getTypeInstance()->setUsedProductAttributeIds(array(Mage::getStoreConfig('erpimportfixer/configurable_config/tamanho_attr_id')));
                 $configurableAttributesData = $configProduct->getTypeInstance()->getConfigurableAttributesAsArray();
                 $configProduct->setCanSaveConfigurableAttributes(true);
                 $configProduct->setConfigurableAttributesData($configurableAttributesData);
                 $configurableProductsData = array();
-                foreach($children as $child) {
+                foreach ($children as $child) {
                     $configurableProductsData[$child['id']] = array(
                         '0' => array(
                             'label' => $child['tamanho'],
-                            'attribute_id' => '155', //id da cor
+                            'attribute_id' => Mage::getStoreConfig('erpimportfixer/configurable_config/tamanho_attr_id'),
                             'value_index' => $child['tamanho_val'],
                             'is_percent' => '0',
                             'pricing_value' => '0'
@@ -160,8 +164,10 @@ class Cammino_Erpimportfixer_ErpimportfixerController extends Mage_Core_Controll
             }
             $configProduct->setConfigurableProductsData($configurableProductsData);
             $configProduct->save();
+            Mage::log('novo produto configrável:' . $configProduct->getSku(), null, 'erpimportfixer.log');
             return $configProduct;
         } catch (Exception $e) {
+            Mage::log($e->getMessage(), null, 'erpimportfixer.log');
             Mage::log($e->getMessage());
             echo $e->getMessage();
         }

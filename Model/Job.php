@@ -9,7 +9,7 @@ class Cammino_Erpimportfixer_Model_Job
         $analized = [];
         $allProducts = Mage::getModel('catalog/product')->getCollection()
             ->addFieldToFilter('type_id', array('eq' => 'simple'))
-            ->addAttributeToFilter('created_at', array('gteq' => strtotime('-2 days', now())));
+            ->addAttributeToFilter('created_at', array('gteq' => strtotime('-1 days', now())));
 
         //Inicializando atributos
         $colorAttribute = Mage::getSingleton('eav/config')
